@@ -8,6 +8,7 @@ The project "Técnologias de acesso a base de dados" or "Database Access Technol
 ## Authors
 
 [@rutszo](https://www.github.com/rutszo) 
+
 [@pnineg](https://www.github.com/pnineg)
 
 
