@@ -20,7 +20,7 @@ error_reporting(-1);
     <?php
 
     if (isset($_SESSION['loggedin'])){
-        echo "Estás logado";
+        header("./localidade.php");
         ?>
         <a href="logout.php">Sai aqui!</a>
         <?php
