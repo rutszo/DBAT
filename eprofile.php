@@ -1,45 +1,53 @@
 <?php
 include("connect.php");
 include("verifylogin.php");
-if (isset($_GET['id'])) {
-    $locationId = $_GET['id'];
+if ($_GET['id'] == $_SESSION['id'] || $_SESSION['admin'] == true){
 
-    $sql = "SELECT * FROM localidade WHERE id = '$locationId'";
+
+
+if (isset($_GET['id'])) {
+  
+    $profileId = $_GET['id'];
+
+    $sql = "SELECT * FROM users WHERE id = '$profileId'";
     $result = mysqli_query($connection, $sql);
 
     if (mysqli_num_rows($result) > 0) {
-        $location = mysqli_fetch_assoc($result);
+        $profile = mysqli_fetch_assoc($result);
     } else {
-        echo "Location not found.";
+        echo "profile not found.";
         exit;
     }
 } else {
-    echo "Location ID not provided.";
+    echo "profile ID not provided.";
     exit;
 }
 
 if (isset($_POST['submit'])) {
 
-    $nome = $_POST['nome'];
-    $descricao = $_POST['descricao'];
-    $linkfoto = $_POST['linkfoto'];
-    $siteoficial =$_POST['siteoficial'];
+    $username = $_POST["username"];
+    $email = $_POST["email"];
+    $pfp= $_POST['pfp'];
 
-    $sql = "UPDATE localidade SET nome = '$nome', descricao = '$descricao', linkfoto = '$linkfoto', siteoficial = '$siteoficial', lastedited = CURRENT_TIMESTAMP WHERE id = '$locationId'";
+    $sql = "UPDATE users SET username = '$username', email = '$email', pfp = '$pfp', edited = CURRENT_TIMESTAMP WHERE id = '$profileId'";
     if (mysqli_query($connection, $sql)) {
         echo "Location updated successfully!";
 
-        header("Location: localidade.php");
+        header("Location: profile.php?id=$profileId");
         exit;
     } else {
         echo "Error updating location: " . mysqli_error($connection);
     }
 }
+
 ?>
 
 <!DOCTYPE html>
 <html>
-<style>
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
     body {
@@ -85,35 +93,35 @@ if (isset($_POST['submit'])) {
       background-color: rgba(255, 255, 255, 0.4);
     }
   </style>
-<head>
-    <title>Edit Location</title>
 </head>
+
 <body>
-<div class="wrapper">
-    <div class="edit">
-    <h1>Edit Location</h1>
-    <form method="POST" action="elocalidade.php?id=<?php echo $locationId; ?>">
-        <label for="nome">Name:</label>
-        <br>
-        <input type="text" id="nome" name="nome" value="<?php echo $location['nome']; ?>"><br>
 
-        <label for="descricao">Description:</label>
-        <br>
-        <input type="text" id="descricao" name="descricao" value="<?php echo $location['descricao']; ?>"><br>
+  <div class="wrapper">
+      <div class="edit">
+        <h1>Editar o perfil de '<?php echo $profile['username']; ?>'</h1>
+        <form method="POST" action="eprofile.php?id=<?php echo $profileId; ?>">
+          <label for="username">Username:</label><br>
+          <input type="text" id="username" name="username" value="<?php echo $profile['username']; ?>"><br>
+  
+          <label for="email">Email:</label>
+          <br>
+          <input type="text" id="email" name="email" value="<?php echo $profile['email']; ?>"><br>
+  
+          <label for="pfp">Foto de perfil:</label>
+          <br>
+          <input type="text" id="pfp" name="pfp" value="<?php echo $profile['pfp']; ?>"><br>
+          <br>
+          <input type="submit" name="submit" value="Update profile">
+          <br>
+          <a href="profile.php?id=<?php echo $profileId; ?>"><input type="button" name="voltar" value="Voltar sem Salvar"></a>
+      </div>
+  </div>
 
-        <label for="linkfoto">Image Link:</label>
-        <br>
-        <input type="text" id="linkfoto" name="linkfoto" value="<?php echo $location['linkfoto']; ?>"><br>
-
-        <label for="siteoficial">Official Site Link:</label>
-        <br>
-        <input type="text" id="siteoficial" name="siteoficial" value="<?php echo $location['siteoficial']; ?>"><br>
-        <br>
-        <input type="submit" name="submit" value="Update Location">
-        <br>
-        <a href="localidade.php"><input type="button" name="voltar" value="Voltar"></a>
-    </form>
-    </div>
-    </div>
 </body>
+
 </html>
+
+<?php
+}
+?>

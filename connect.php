@@ -1,6 +1,8 @@
 <?php
-include("./environment.php");
+include("environment.php");
 
+session_start();
+error_reporting(0);
 $connection = mysqli_connect($host, $username, $password, $database);
 
 if (!$connection) {
@@ -8,6 +10,6 @@ if (!$connection) {
 }
 
 if ($connection){
-    echo 'Conectado com sucesso!';
+    //echo 'Conectado com sucesso!';
 }
 ?>

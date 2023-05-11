@@ -1,23 +1,11 @@
 <?php
 include("connect.php");
 include("verifylogin.php");
-function getImage($conn, $locid)
-{
-    $sql = "SELECT linkfoto FROM localidade where id = $locid";
-    $result = mysqli_query($conn, $sql);
-
-    if (mysqli_num_rows($result) < 0) {
-        return 0;
-    }
-
-    while ($row = mysqli_fetch_assoc($result)) {
-        echo "teste";
-    }
-}
+include("verifyadmin.php");
 
 function getLocalidades($conn)
 {
-    $sql = "SELECT * FROM localidade WHERE aprovado = 2 ORDER BY id";
+    $sql = "SELECT * FROM localidade WHERE aprovado = 1 ORDER BY id";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) < 0) {
@@ -46,12 +34,18 @@ function getLocalidades($conn)
                     <a class='default' href='$sof'>Site Oficial</a>
                     <a class='default' href='elocalidade.php?id=$id'>Edit</a>
                     <p>Criador: <a class='criador' href='profile.php?id=$criador'>$nomecriador</a> </p><p>Editado: $editado</p>
+                    <form method='POST' action='appverify.php'>
+                    <input type='hidden' name='post_id' value='$id'>
+                    <button type='submit' name='approve'>Aprovar</button>
+                    <button type='submit' name='reject'>Rejeitar</button>
+                    </form>
                 </div>";
         }
     }
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -61,13 +55,12 @@ function getLocalidades($conn)
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
         body {
-            background-image: url(https://voenews.com.br/wp-content/uploads/2019/08/Berlengas-Island-_Centrode-Portugal.jpg);
-            background-repeat: repeat;
-            background-size: cover;
-            
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
+                background-image: url(https://voenews.com.br/wp-content/uploads/2019/08/Berlengas-Island-_Centrode-Portugal.jpg);
+                background-repeat: no-repeat;
+                background-size: cover;
+                margin: 0;
+                padding: 0;
+                font-family: 'Poppins', sans-serif;
         }
 
         .wrapper {
@@ -76,9 +69,8 @@ function getLocalidades($conn)
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-
             width: 100vw;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.6);
         }
 
         .clocalidade {
@@ -173,41 +165,30 @@ function getLocalidades($conn)
             text-align: center;
             margin-bottom: 20px;
         }
-        .edit a{
+        .zeto, button{
             width: 300px;
-
             border-radius: 5px;
-            height: 50px;
+            height: 25px;
             overflow: hidden;
             border: 2px solid black;
             background-color: rgba(255, 255, 255, 0.4);
-            text-decoration: none;
-            color: black;
+        }
+        .zeto{
+            width: 100px;
+            height: 100px;
         }
     </style>
 </head>
 
 <body>
-    <div class="wrapper">
+    <div class="wrapper" style="width:100vw;height:100px;">
 
+    <center><a href="adminpage.php"><input class="zeto" type="button" name="voltar" value="Voltar"></a></center>
+    </div>
+    <div class="wrapper">
         <?php
         getLocalidades($connection);
         ?>
-        <div class="clocalidade">
-            <a href="clocalidade.php"><button>Criar Localidade</button></a>
-        </div>
-        <div class="clocalidade">
-        <div class="edit">
-            <a href="logout.php">Voltar</a>
-            <?php
-                if ($_SESSION['admin'] == true){
-                    ?>
-                    <a href="adminpage.php">Pagina de admin</a>
-                    <?php
-                }
-            ?>
-        </div>
-        </div>
         
     </div>
 </body>
